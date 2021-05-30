@@ -62,7 +62,9 @@ const TodoList: FC = (): ReactElement => {
   return (
     <Card title="小小备忘录" style={{ width: 400, margin: 20, height: "auto" }}>
       <Space direction="vertical">
-        <TdInput addTodo={addTodo} todoList={state.todoList} />
+        <div style={{ paddingLeft: 14 }}>
+          <TdInput addTodo={addTodo} todoList={state.todoList} />
+        </div>
         <TdList
           todoList={state.todoList}
           removeTodo={removeTodo}
