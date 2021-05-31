@@ -37,7 +37,9 @@ const TdList: FC<IProps> = ({
     return final;
   }
 
-  const todoListSorted = insertSort(todoList)
+  let doneTodo = todoList.filter(item => item.completed === true);
+  let dingTodo = todoList.filter(item => item.completed === false);
+  const todoListSorted = insertSort(dingTodo).concat(insertSort(doneTodo));
   return (
     <List
       itemLayout="horizontal"
