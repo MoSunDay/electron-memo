@@ -4,3 +4,4 @@ dist/*
 dist
 build/*
 react-hooks-todo-*
+memo
