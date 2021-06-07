@@ -42,7 +42,7 @@ function createWindow() {
     },
   ];
 
-  let appIcon = new Tray(path.join(__dirname, "build/logo192.png"));
+  let appIcon = new Tray(path.join(__dirname, "build/ico.png"));
   const contextMenu = Menu.buildFromTemplate(menuTemplate);
   appIcon.setToolTip('我的托盘图标');
   appIcon.setContextMenu(contextMenu);

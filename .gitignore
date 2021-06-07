@@ -5,3 +5,4 @@ dist
 build/*
 react-hooks-todo-*
 memo
+.DS_Store
