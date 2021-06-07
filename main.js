@@ -27,10 +27,27 @@ function createWindow() {
     console.log(`file://${path.join(__dirname, "build/index.html")}`);
   }
 
-  var menuTemplate = [
-  ];
+  if (process.platform === 'linux') {
+    var menuTemplate = [
+      {
+        label: '退出',
+        click: () => {
+          app.exit();
+        }
+      },
+      {
+        label: '打开',
+        click: () => {
+          win.show();
+        }
+      },
+    ];
+  } else {
+    var menuTemplate = [
+    ];
+  }
 
-  let appIcon = new Tray(path.join(__dirname, "build/ico.png"));
+  let appIcon = new Tray(path.join(__dirname, "ico.png"));
   const contextMenu = Menu.buildFromTemplate(menuTemplate);
   appIcon.setToolTip('我的托盘图标');
   appIcon.setContextMenu(contextMenu);
