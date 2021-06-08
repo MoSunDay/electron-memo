@@ -75,16 +75,14 @@ function createWindow() {
         if (todo.completed === false && !deadline.startsWith("19")) {
           if (moment(deadline).unix() < now) {
             dialog.showErrorBox('Deadline 的事项已超时!', todo.content);
-          }
-          if (moment(deadline).unix() - 10 * 60 < now) {
+          } else if (moment(deadline).unix() - 10 * 60 < now) {
             const notify = new Notification({ title: "小小备忘录 - 提醒", body: `即将超时` })
             notify.show();
           }
         }
       });
     });
-  }
-
+  };
   deadlineAlert();
   setInterval(deadlineAlert, 1000 * 60 * 5);
 }
