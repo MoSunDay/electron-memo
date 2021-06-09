@@ -53,8 +53,9 @@ function todoReducer(state: IState, action: IAction): IState {
       }
       if (todoIndex !== -1) {
         if (toggleDone) {
+          const offset = todoIndex === stateTodoList.length - 2 ? 1 : 0
           completedIndex = completedIndex === stateTodoList.length - 1 ? completedIndex : completedIndex - 1
-          stateTodoList = arrayMove(stateTodoList, todoIndex, completedIndex)
+          stateTodoList = arrayMove(stateTodoList, todoIndex, completedIndex - offset)
         } else {
           completedIndex = todoIndex < completedIndex ? completedIndex - 1 : completedIndex
           stateTodoList = arrayMove(stateTodoList, todoIndex, completedIndex)
