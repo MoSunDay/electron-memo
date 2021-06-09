@@ -4,7 +4,12 @@
     overflow: hidden
 }
 
-a {
-    text-decoration: none;
-    color: #000;
+.row-dragging {
+    background: #fafafa;
+    border: 1px solid #ccc;
+}
+
+.SortableHelper {
+    box-shadow: rgba(0, 0, 0, 0.075) 0 1px 6px, rgba(0, 0, 0, 0.075) 0 1px 4px;
+    background-color: lightgreen;
 }
