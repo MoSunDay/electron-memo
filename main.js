@@ -65,8 +65,8 @@ function createWindow() {
     win.hide();
   });
 
-  const now = moment().unix();
   function deadlineAlert() {
+    const now = moment().unix();
     win.webContents
     .executeJavaScript('localStorage.getItem("todoList");', true)
     .then(result => {
