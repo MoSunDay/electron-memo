@@ -1,3 +1,3 @@
 #!/bin/sh
-npm run build && npm run electron-start
+npm run build
 yarn electron-build
