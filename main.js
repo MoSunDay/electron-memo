@@ -3,6 +3,8 @@ const pkg = require("./package.json"); // 引用package.json
 const path = require("path");
 const moment = require("moment");
 const dialog = require('electron').dialog;
+const CronJob = require('cron').CronJob;
+
 
 let win
 function createWindow() {
@@ -83,8 +85,13 @@ function createWindow() {
       });
     });
   };
+
   deadlineAlert();
-  setInterval(deadlineAlert, 1000 * 60);
+  let job = new CronJob('*/1 * * * *', () => {
+    console.log(`${moment().format()} cron job`);
+    deadlineAlert();
+  });
+  job.start();
 }
 
 app.on('ready', createWindow);
