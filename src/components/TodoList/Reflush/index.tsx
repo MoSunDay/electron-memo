@@ -12,31 +12,24 @@ const Reflush: FC<IProps> = ({
     return new Promise((resolve) => setTimeout(resolve, time));
   }
 
-  const reFlush = () => {
+  const reFlush = (): number => {
     setLoading(true);
     sleep(250).then(() => {
       setLoading(false);
     });
+    return 0;
   }
 
   const [count, setCount] = useState(0)
   const interval = 60
   useEffect(() => {
     const countTimer = setInterval(() => {
-      setCount(c => c + 1)
+      setCount(c => {
+          return c >= interval ? reFlush() : c + 1
+      })
     }, 1000)
     return () => {
       clearInterval(countTimer)
-    }
-  }, [])
-
-  useEffect(() => {
-    const flushTimer = setInterval(() => {
-      setCount(0)
-      reFlush()
-    }, interval * 1000)
-    return () => {
-      clearInterval(flushTimer)
     }
   }, [])
 
