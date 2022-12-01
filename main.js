@@ -40,7 +40,7 @@ function createWindow() {
   });
 
   appIcon.on('right-click', () => {
-    app.quit();
+    appIcon.popUpContextMenu();
   });
 
   win.on('close', (event) => {
