@@ -1,61 +1,46 @@
 import React, { FC, ReactElement } from "react";
+import { SortableContainer } from "react-sortable-hoc";
+import arrayMove from "array-move";
+import { List } from "antd";
+
 import { ITodo } from "../typings";
 import IdItem from "./Item";
-
-import { List } from "antd";
-import moment from "moment";
-
+import "./list.css";
 
 interface IProps {
   todoList: ITodo[];
   removeTodo: (id: number) => void;
   toggleTodo: (id: number) => void;
+  initTodo: (todos: ITodo[]) => void;
 }
 
 const TdList: FC<IProps> = ({
   todoList,
   removeTodo,
   toggleTodo,
+  initTodo,
 }): ReactElement => {
+  const SortableList = SortableContainer(({ items }) => {
+    return (
+      <List>
+        {items.map((todo: ITodo, index: number) => (
+          <IdItem
+            key={`${todo.id}`}
+            index={index}
+            todo={todo}
+            removeTodo={removeTodo}
+            toggleTodo={toggleTodo}
+          />
+        ))}
+      </List>
+    );
+  });
 
-  const insertSort = (arr: ITodo[]): ITodo[] => {
-    let final: ITodo[] = new Array(...arr);
-    for (let i = 1; i < final.length; i++) {
-        let mark: ITodo = final[i];
-        let j: number;
-
-        for (j = i - 1; j >= 0; j--) {
-            if (final[j].deadline.format() > mark.deadline.format() ) {
-                break;
-            } else {
-                final[j + 1] = final[j];
-            }
-        }
-        final[j + 1] = mark;
-    }
-
-    return final;
-  }
-
-  let doneTodo = todoList.filter(item => item.completed === true);
-  let dingTodo = todoList.filter(item => item.completed === false);
-  const todoListSorted = insertSort(dingTodo).concat(insertSort(doneTodo));
-  return (
-    <List
-      itemLayout="horizontal"
-      dataSource={todoListSorted}
-      size="small"
-      renderItem={(todo: ITodo) => (
-      <IdItem
-        key={todo.id}
-        todo={todo}
-        removeTodo={removeTodo}
-        toggleTodo={toggleTodo}
-        nowTimestamp={moment().format()}
-      />
-      )}
-    />
-  );
+  const onSortEnd = ({ oldIndex, newIndex }) => {
+    initTodo(arrayMove(todoList, oldIndex, newIndex));
+    console.log(todoList)
+  };
+  return <SortableList disableAutoscroll items={todoList} onSortEnd={onSortEnd} helperClass="row-dragging"/>;
 };
 
 export default TdList;

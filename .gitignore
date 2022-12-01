@@ -6,3 +6,4 @@ build/*
 react-hooks-todo-*
 memo
 .DS_Store
+yarn-error.log
