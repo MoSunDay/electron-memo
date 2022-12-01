@@ -47,7 +47,7 @@ const TdList: FC<IProps> = ({
   const onSortEnd = ({ oldIndex, newIndex }) => {
     initTodo(arrayMove(todoList, oldIndex, newIndex));
   };
-  return <SortableList distance={1} items={todoList} onSortEnd={onSortEnd}/>;
+  return <SortableList distance={8} items={todoList} onSortEnd={onSortEnd}/>;
 };
 
 export default TdList;
