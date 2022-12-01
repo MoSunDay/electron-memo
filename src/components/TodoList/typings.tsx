@@ -1,6 +1,10 @@
+import moment from "moment";
+
+
 export interface ITodo {
   id: number;
   content: string;
+  deadline: moment.Moment;
   completed: boolean;
 }
 

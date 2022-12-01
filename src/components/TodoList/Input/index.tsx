@@ -1,5 +1,7 @@
-import React, { useState, FC, useRef, ReactElement } from "react";
+import React, { useState, FC, useRef, ReactElement, useEffect } from "react";
 import { Input, Button, Space } from "antd";
+import moment from "moment";
+import { DatePicker, TimePicker, Checkbox } from "antd";
 import { ITodo } from "../typings";
 
 interface IProps {
@@ -9,7 +11,12 @@ interface IProps {
 
 const TdInput: FC<IProps> = ({ addTodo, todoList }): ReactElement => {
   const inputRef = useRef<Input>(null);
+  const [dateValue, setdateVale] = useState(moment("1970-01-01 00:00:00", "YYYY-MM-DD HH:mm:ss"));
+
+  const [enableDeadline, setEnableDeadline] = useState(false);
   const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {}, [enableDeadline]);
 
   const addItem = (): void => {
     if (inputValue.length) {
@@ -21,15 +28,17 @@ const TdInput: FC<IProps> = ({ addTodo, todoList }): ReactElement => {
 
       addTodo({
         id: new Date().getTime(),
+        deadline: dateValue,
         content: inputValue,
         completed: false,
       });
 
-      setInputValue('');
+      console.log(`${dateValue}`)
+      setInputValue("");
     }
   };
 
-  const onChange = (e: React.FormEvent<HTMLInputElement>) => {
+  const inputOnChange = (e: React.FormEvent<HTMLInputElement>) => {
     setInputValue(e.currentTarget.value);
   };
 
@@ -39,18 +48,55 @@ const TdInput: FC<IProps> = ({ addTodo, todoList }): ReactElement => {
     }
   };
 
+  const dateTimeOnChange = (value: moment.Moment | null) => {
+    if (value !== null) {
+      setdateVale(value);
+      console.log(value);
+    }
+  };
+
+  const tiggerEnableDeadline = () => {
+    const currentValue: boolean = !enableDeadline;
+    setEnableDeadline(currentValue);
+    if (!currentValue) {
+      setdateVale(moment("1970-01-01 00:00:00", "YYYY-MM-DD HH:mm:ss"))
+    } else {
+      setdateVale(moment())
+    }
+  };
+
   return (
-    <Space>
+    <Space direction="vertical">
+      <Space>
+        <Space>Deadline</Space>
+        <Checkbox onChange={() => tiggerEnableDeadline()} />
+      </Space>
       <Input
         placeholder="备忘点什么呢?"
         maxLength={140}
         style={{ width: 250 }}
-        onChange={onChange}
+        onChange={inputOnChange}
         value={inputValue}
         onPressEnter={onPressEnter}
         ref={inputRef}
       />
-      <Button onClick={addItem}>创建</Button>
+      <Space>
+        {enableDeadline === true ? (
+          <Space>
+            <DatePicker size="middle" value={dateValue} onChange={dateTimeOnChange} />
+            <TimePicker
+              size="middle"
+              use12Hours
+              format="h:mm a"
+              value={dateValue}
+              onChange={dateTimeOnChange}
+            />
+          </Space>
+        ) : (
+          <Space></Space>
+        )}
+        <Button onClick={addItem}>创建</Button>
+      </Space>
     </Space>
   );
 };

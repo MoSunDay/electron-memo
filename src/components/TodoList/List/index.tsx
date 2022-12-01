@@ -1,7 +1,9 @@
 import React, { FC, ReactElement } from "react";
-import { Space } from "antd";
 import { ITodo } from "../typings";
 import IdItem from "./Item";
+
+import { List } from "antd";
+
 
 interface IProps {
   todoList: ITodo[];
@@ -15,19 +17,19 @@ const TdList: FC<IProps> = ({
   toggleTodo,
 }): ReactElement => {
   return (
-    <Space direction="vertical">
-      {todoList &&
-        todoList.map((todo: ITodo) => {
-          return (
-            <IdItem
-              key={todo.id}
-              todo={todo}
-              removeTodo={removeTodo}
-              toggleTodo={toggleTodo}
-            />
-          );
-        })}
-    </Space>
+    <List
+      itemLayout="horizontal"
+      dataSource={todoList}
+      size="small"
+      renderItem={(todo: ITodo) => (
+      <IdItem
+        key={todo.id}
+        todo={todo}
+        removeTodo={removeTodo}
+        toggleTodo={toggleTodo}
+      />
+      )}
+    />
   );
 };
 

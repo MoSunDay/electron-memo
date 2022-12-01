@@ -11,6 +11,7 @@ import TdInput from "./Input";
 import TdList from "./List";
 import { todoReducer } from "./reducer";
 import { ITodo, IState, ACTION_TYPE } from "./typings";
+import moment from "moment";
 
 function init(initTodoList: ITodo[]): IState {
   return {
@@ -22,8 +23,11 @@ const TodoList: FC = (): ReactElement => {
   const [state, dispatch] = useReducer(todoReducer, [], init);
 
   useEffect(() => {
-    document.title = "小小备忘录"
-    const todoList = JSON.parse(localStorage.getItem("todoList") || "[]");
+    document.title = "小小备忘录";
+    const todoList = JSON.parse(localStorage.getItem("todoList") || "[]").map((todo: ITodo) => ({
+      ...todo,
+      deadline: moment(todo.deadline)
+    })); 
     dispatch({
       type: ACTION_TYPE.INIT_TODOLIST,
       payload: todoList,
