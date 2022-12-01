@@ -2,14 +2,29 @@ import { ACTION_TYPE, IAction } from "./typings";
 import { IState, ITodo } from "./typings";
 import arrayMove from "array-move";
 
+let stateTodoList: ITodo[]
+let completedIndex: number 
+let todoIndex: number 
+let toggleDone: boolean
+let i: number
+
 function todoReducer(state: IState, action: IAction): IState {
   const { type, payload } = action;
 
   switch (type) {
     case ACTION_TYPE.ADD_TODO:
+      stateTodoList = state.todoList
+      completedIndex = stateTodoList.length - 1
+      for (i = 0; i < stateTodoList.length; i++) {
+        if (stateTodoList[i].completed === true) {
+          completedIndex = i
+          break
+        }
+      }
+      stateTodoList = arrayMove([payload as ITodo, ...stateTodoList], 0, completedIndex)
       return {
         ...state,
-        todoList: [payload as ITodo, ...state.todoList],
+        todoList: stateTodoList,
       };
     case ACTION_TYPE.REMOVE_TODO:
       return {
@@ -17,11 +32,10 @@ function todoReducer(state: IState, action: IAction): IState {
         todoList: state.todoList.filter((todo: ITodo) => todo.id !== payload),
       };
     case ACTION_TYPE.TOGGLE_TODO:
-      let stateTodoList = state.todoList
-      let completedIndex = stateTodoList.length - 1
-      let todoIndex = -1
-      let toggleDone = true;
-      let i: number
+      stateTodoList = state.todoList
+      completedIndex = stateTodoList.length - 1
+      todoIndex = -1
+      toggleDone = true;
 
       for (i = 0; i < stateTodoList.length; i++) {
         if (todoIndex !== -1 && completedIndex !== stateTodoList.length - 1) {
