@@ -1,5 +1,5 @@
 const { app, BrowserWindow, Tray, Menu, Notification } = require("electron");
-const pkg = require("./package.json"); // 引用package.json
+const pkg = require("./package.json");
 const path = require("path");
 const moment = require("moment");
 const dialog = require('electron').dialog;
@@ -29,42 +29,53 @@ function createWindow() {
     console.log(`file://${path.join(__dirname, "build/index.html")}`);
   }
 
-  if (process.platform === 'linux') {
-    var menuTemplate = [
-      {
-        label: '退出',
-        click: () => {
-          app.exit();
-        }
-      },
-      {
-        label: '打开',
-        click: () => {
-          win.show();
-        }
-      },
-    ];
-  } else {
-    var menuTemplate = [
-    ];
-  }
+  var menuTemplate = [
+    {
+      label: '退出',
+      click: () => {
+        app.exit();
+      }
+    },
+    {
+      label: '打开',
+      click: () => {
+        win.show();
+      }
+    },
+  ];
 
   let appIcon = new Tray(path.join(__dirname, "ico.png"));
   const contextMenu = Menu.buildFromTemplate(menuTemplate);
   appIcon.setToolTip('我的托盘图标');
   appIcon.setContextMenu(contextMenu);
 
-  appIcon.on('click', () => {
+  appIcon.on('double-click', (event) => {
     win.show();
   });
 
-  appIcon.on('right-click', () => {
+  appIcon.on('right-click', (event) => {
     appIcon.popUpContextMenu();
   });
 
   win.on('close', (event) => {
     event.preventDefault();
     win.hide();
+    // const {dialog, nativeImage} = require('electron')
+    // dialog.showMessageBox({
+    //   type: "info",
+    //   title: "帮助",
+    //   message: "close",
+    //   buttons: ["确定", "取消"],
+    //   incon: nativeImage.createFromPath("./ioc.png"),
+    //   canceId: 2
+    // }, function (index) {
+    //   if (index == 2) {
+    //     event.preventDefault();
+    //     win.hide();
+    //   } else {
+    //     app.exit()
+    //   }
+    // })
   });
 
   function deadlineAlert() {
