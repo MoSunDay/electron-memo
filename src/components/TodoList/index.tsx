@@ -4,8 +4,9 @@ import React, {
   useCallback,
   useEffect,
   useReducer,
+  useState
 } from "react";
-import { Space, Card } from "antd";
+import { Space, Card, Button } from "antd";
 
 import TdInput from "./Input";
 import TdList from "./List";
@@ -21,6 +22,8 @@ function init(initTodoList: ITodo[]): IState {
 
 const TodoList: FC = (): ReactElement => {
   const [state, dispatch] = useReducer(todoReducer, [], init);
+  const [loading, setLoading] = useState(false);
+  const [initTask, setInitTask] = useState(false);
 
   useEffect(() => {
     document.title = "小小备忘录";
@@ -66,8 +69,24 @@ const TodoList: FC = (): ReactElement => {
     });
   }, []);
 
+  const sleep = (time) => {
+    return new Promise((resolve) => setTimeout(resolve, time));
+  }
+
+  const reFlush = () => {
+    setLoading(true);
+    sleep(300).then(() => {
+      setLoading(false);
+    });
+  }
+
+  if (!initTask) {
+    setInitTask(true);
+    setInterval(() => reFlush(), 90 * 1000);
+  }
+
   return (
-    <Card title="小小备忘录" style={{ width: 400, margin: 20, height: "auto" }}>
+    <Card title="小小备忘录" style={{ width: 400, margin: 20, height: "auto" }} loading={loading} extra={ <Button onClick={() => reFlush() }>刷新</Button>}>
       <Space direction="vertical">
         <div style={{ paddingLeft: 14 }}>
           <TdInput addTodo={addTodo} todoList={state.todoList} />
