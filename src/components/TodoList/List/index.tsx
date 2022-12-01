@@ -20,7 +20,6 @@ const TdList: FC<IProps> = ({
 
   const insertSort = (arr: ITodo[]) => {
     let final: ITodo[] = new Array(...arr);
-    let doneTodoNumber = 0;
     for (let i = 1; i < final.length; i++) {
         let mark: ITodo = final[i];
         let j: number;
