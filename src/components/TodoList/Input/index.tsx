@@ -66,6 +66,7 @@ const TdInput: FC<IProps> = ({ addTodo, todoList }): ReactElement => {
   };
 
   return (
+    <div>
     <Space direction="vertical">
       <Space>
         <Space>Deadline</Space>
@@ -74,7 +75,7 @@ const TdInput: FC<IProps> = ({ addTodo, todoList }): ReactElement => {
       <Input
         placeholder="备忘点什么呢?"
         maxLength={140}
-        style={{ width: 250 }}
+        style={{ width: 300 }}
         onChange={inputOnChange}
         value={inputValue}
         onPressEnter={onPressEnter}
@@ -83,14 +84,18 @@ const TdInput: FC<IProps> = ({ addTodo, todoList }): ReactElement => {
       <Space>
         {enableDeadline === true ? (
           <Space>
-            <DatePicker size="middle" value={dateValue} onChange={dateTimeOnChange} />
-            <TimePicker
-              size="middle"
-              use12Hours
-              format="h:mm a"
-              value={dateValue}
-              onChange={dateTimeOnChange}
-            />
+            <div style={{ width: 118 }}>
+              <DatePicker size="middle" value={dateValue} onChange={dateTimeOnChange} />
+            </div>
+            <div style={{ width: 102 }}>
+              <TimePicker
+                size="middle"
+                use12Hours
+                format="h:mm a"
+                value={dateValue}
+                onChange={dateTimeOnChange}
+              />
+            </div>
           </Space>
         ) : (
           <Space></Space>
@@ -98,6 +103,7 @@ const TdInput: FC<IProps> = ({ addTodo, todoList }): ReactElement => {
         <Button onClick={addItem}>创建</Button>
       </Space>
     </Space>
+    </div>
   );
 };
 
