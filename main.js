@@ -36,15 +36,17 @@ function createWindow() {
     });
   }
   deadlineAlert();
-  setInterval(deadlineAlert, 1000 * 5 * 60);
+  setInterval(deadlineAlert, 1000 * 60 * 5);
 }
 
 app.whenReady().then(createWindow);
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
+  app.quit();
+});
+
+app.on('close', (event) => {
+  event.preventDefault()
 });
 
 app.on("activate", () => {
