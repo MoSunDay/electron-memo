@@ -37,6 +37,12 @@ function createWindow() {
       }
     },
     {
+      label: '关闭',
+      click: () => {
+        win.hide();
+      }
+    },
+    {
       label: '退出',
       click: () => {
         app.exit();
