@@ -28,18 +28,6 @@ function createWindow() {
   }
 
   var menuTemplate = [
-    {
-      label: '退出',
-      click: () => {
-        app.exit();
-      }
-    },
-    {
-      label: '打开',
-      click: () => {
-        win.show();
-      }
-    },
   ];
 
   let appIcon = new Tray(path.join(__dirname, "build/ico.png"));
@@ -47,7 +35,7 @@ function createWindow() {
   appIcon.setToolTip('我的托盘图标');
   appIcon.setContextMenu(contextMenu);
 
-  appIcon.on('click',function(){
+  appIcon.on('click', () => {
     win.show();
   });
 
@@ -86,19 +74,11 @@ function createWindow() {
 
 app.on('ready', createWindow);
 
-app.on('show', () => {
-  appIcon.setHighlightMode('always')
-});
-
-app.on('hide', () => {
-  appIcon.setHighlightMode('never')
-});
-
-app.on('closed', function() {
+app.on('closed', () => {
   win = null;
 });
 
-app.on('close', function(event) {
+app.on('close', (event) => {
   app.exit();
 });
 
