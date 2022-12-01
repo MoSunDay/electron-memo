@@ -4,6 +4,7 @@ dist/*
 dist
 build/*
 react-hooks-todo-*
+electron-memo-*
 memo
 .DS_Store
 yarn-error.log
