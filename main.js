@@ -31,15 +31,15 @@ function createWindow() {
 
   var menuTemplate = [
     {
-      label: '退出',
-      click: () => {
-        app.exit();
-      }
-    },
-    {
       label: '打开',
       click: () => {
         win.show();
+      }
+    },
+    {
+      label: '退出',
+      click: () => {
+        app.exit();
       }
     },
   ];
