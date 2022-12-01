@@ -1,5 +1,5 @@
 import { ACTION_TYPE, IAction } from "./typings";
-import { IState, ITodo } from "./typings";
+import { IState, LState, ITodo } from "./typings";
 import arrayMove from "array-move";
 
 let stateTodoList: ITodo[]
@@ -75,4 +75,23 @@ function todoReducer(state: IState, action: IAction): IState {
   }
 }
 
-export { todoReducer };
+function lReducer(state: LState, action: IAction): LState {
+  const { type, payload } = action;
+
+  switch (type) {
+    case ACTION_TYPE.SET_LOADING:
+      return {
+        ...state,
+        loading: payload as boolean,
+      };
+      case ACTION_TYPE.UNSET_LOADING:
+        return {
+          ...state,
+          loading: payload as boolean,
+        };
+    default:
+      return state;
+  }
+}
+
+export { todoReducer, lReducer };

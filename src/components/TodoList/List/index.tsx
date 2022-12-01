@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useState } from "react";
+import React, { FC, ReactElement } from "react";
 import { SortableContainer } from "react-sortable-hoc";
 import arrayMove from "array-move";
 import { List } from "antd";
@@ -12,6 +12,7 @@ interface IProps {
   removeTodo: (id: number) => void;
   toggleTodo: (id: number) => void;
   initTodo: (todos: ITodo[]) => void;
+  loading: boolean;
 }
 
 const TdList: FC<IProps> = ({
@@ -19,24 +20,8 @@ const TdList: FC<IProps> = ({
   removeTodo,
   toggleTodo,
   initTodo,
+  loading
 }): ReactElement => {
-  const [loading, setLoading] = useState(false);
-  const [initTask, setInitTask] = useState(false);
-
-  const sleep = (time) => {
-    return new Promise((resolve) => setTimeout(resolve, time));
-  }
-
-  const reFlush = () => {
-    setLoading(true);
-    sleep(300).then(() => {
-      setLoading(false);
-    });
-  }
-  if (!initTask) {
-    setInitTask(true);
-    setInterval(() => reFlush(), 90 * 1000);
-  }
 
   const SortableList = SortableContainer(({ items }) => {
     return (
