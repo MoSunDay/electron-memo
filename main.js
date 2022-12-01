@@ -81,7 +81,7 @@ function createWindow() {
   }
 
   deadlineAlert();
-  setInterval(deadlineAlert, 1000 * 5);
+  setInterval(deadlineAlert, 1000 * 60 * 5);
 }
 
 app.on('ready', createWindow);
