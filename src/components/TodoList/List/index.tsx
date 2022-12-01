@@ -18,7 +18,7 @@ const TdList: FC<IProps> = ({
   toggleTodo,
 }): ReactElement => {
 
-  const insertSort = (arr: ITodo[]) => {
+  const insertSort = (arr: ITodo[]): ITodo[] => {
     let final: ITodo[] = new Array(...arr);
     for (let i = 1; i < final.length; i++) {
         let mark: ITodo = final[i];
