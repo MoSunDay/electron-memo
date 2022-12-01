@@ -1,3 +1,4 @@
 #!/bin/sh
-npm run build && npm run electron-start
-yarn electron-build
+yarn install
+npm run build
+yarn electron-build --overwrite
