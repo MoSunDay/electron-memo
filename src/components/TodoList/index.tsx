@@ -59,17 +59,25 @@ const TodoList: FC = (): ReactElement => {
     });
   }, []);
 
+  const initTodo = useCallback((todos: ITodo[]): void => {
+    dispatch({
+      type: ACTION_TYPE.INIT_TODOLIST,
+      payload: todos,
+    });
+  }, []);
+
   return (
     <Card title="小小备忘录" style={{ width: 400, margin: 20, height: "auto" }}>
       <Space direction="vertical">
         <div style={{ paddingLeft: 14 }}>
           <TdInput addTodo={addTodo} todoList={state.todoList} />
-        </div>
-        <TdList
+          <TdList
           todoList={state.todoList}
           removeTodo={removeTodo}
           toggleTodo={toggleTodo}
+          initTodo={initTodo}
         />
+        </div>
       </Space>
     </Card>
   );
