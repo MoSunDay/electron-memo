@@ -43,9 +43,40 @@ const TdList: FC<IProps> = ({
     //   </div>
     // );
   });
+  const sortList = (arr: ITodo[]): void => {
+    initTodo([
+      ...arr.filter((element, index, array) => {
+        if (element.completed === false) {
+          return element;
+        }
+      }),
+      ...arr.filter((element, index, array) => {
+        if (element.completed === true) {
+          return element;
+        }
+      }),
+    ])
+  };
 
-  const onSortEnd = ({ oldIndex, newIndex }) => {
-    initTodo(arrayMove(todoList, oldIndex, newIndex));
+  const onSortEnd = ({ oldIndex, newIndex }): void => {
+    todoList = arrayMove(todoList, oldIndex, newIndex)
+    initTodo(todoList);
+    if (todoList.length >= 2) {
+      if (newIndex === 0) {
+        if (todoList[newIndex].completed === true && todoList[newIndex+1].completed === false) {
+          sortList(todoList);
+          return;
+        }
+      } else if (newIndex === todoList.length - 1) {
+        if (todoList[newIndex].completed === false && todoList[newIndex-1].completed === true) {
+          sortList(todoList);
+          return;
+        }
+      } else if (todoList[newIndex+1].completed !== todoList[newIndex].completed && todoList[newIndex].completed !== todoList[newIndex-1].completed) {
+        sortList(todoList);
+        return;
+      }
+    }
   };
   return <SortableList distance={8} items={todoList} onSortEnd={onSortEnd}/>;
 };
