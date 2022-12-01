@@ -1,6 +1,9 @@
 const { app, BrowserWindow } = require("electron");
 const pkg = require("./package.json"); // 引用package.json
 const path = require("path");
+const moment = require("moment");
+const dialog = require('electron').dialog;
+
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -18,6 +21,22 @@ function createWindow() {
     win.loadFile(path.join(__dirname, "build/index.html"));
     console.log(`file://${path.join(__dirname, "build/index.html")}`);
   }
+
+  const now = moment();
+  function deadlineAlert() {
+    win.webContents
+    .executeJavaScript('localStorage.getItem("todoList");', true)
+    .then(result => {
+      JSON.parse(result).map((todo) => {
+        const deadline = todo.deadline;
+        if (todo.completed === false && !deadline.startsWith("19") && moment(deadline) < now) {
+          dialog.showErrorBox('Deadline 的事项已超时!', todo.content);
+        }
+      });
+    });
+  }
+  deadlineAlert();
+  setInterval(deadlineAlert, 1000 * 5 * 60);
 }
 
 app.whenReady().then(createWindow);

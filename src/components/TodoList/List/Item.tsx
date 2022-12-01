@@ -19,7 +19,7 @@ const TdItem: FC<IProps> = ({ todo, removeTodo, toggleTodo, nowTimestamp }): Rea
     <span>
     <List.Item>
       {
-        deadlineTimestamp !== "1970-01-01T00:00:00+08:00" ? 
+        !deadlineTimestamp.startsWith("19") ?
           <List.Item.Meta
             title={
               <Space>
