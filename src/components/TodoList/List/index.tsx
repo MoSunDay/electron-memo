@@ -1,5 +1,5 @@
 import React, { FC, ReactElement } from "react";
-import { SortableContainer } from "react-sortable-hoc";
+import { SortableContainer, SortableElement } from "react-sortable-hoc";
 import arrayMove from "array-move";
 import { List } from "antd";
 
@@ -34,13 +34,20 @@ const TdList: FC<IProps> = ({
         ))}
       </List>
     );
+    // const SortableItem = SortableElement(({value}) => <li>{value}</li>);
+    // return (
+    //   <div>
+    //     {items.map((todo: ITodo, index: number) => (
+    //       <SortableItem key={`item-${todo.id}`} index={index} value={todo.content} />
+    //     ))}
+    //   </div>
+    // );
   });
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
     initTodo(arrayMove(todoList, oldIndex, newIndex));
-    console.log(todoList)
   };
-  return <SortableList disableAutoscroll items={todoList} onSortEnd={onSortEnd} helperClass="row-dragging"/>;
+  return <SortableList distance={1} items={todoList} onSortEnd={onSortEnd}/>;
 };
 
 export default TdList;
