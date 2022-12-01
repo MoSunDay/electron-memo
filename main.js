@@ -29,32 +29,28 @@ function createWindow() {
 
   var menuTemplate = [
     {
-      label: '打开',
-      click: () => {
-        win.show();
-      }
-    },
-    {
       label: '退出',
       click: () => {
         app.exit();
       }
     },
     {
-      label: '隐藏',
+      label: '打开',
       click: () => {
-        win.hide();
+        win.show();
       }
-    }
+    },
   ];
 
   let appIcon = new Tray(path.join(__dirname, "build/logo192.png"));
   const contextMenu = Menu.buildFromTemplate(menuTemplate);
   appIcon.setToolTip('我的托盘图标');
   appIcon.setContextMenu(contextMenu);
+
   appIcon.on('click',function(){
     win.show();
-  })
+  });
+
   appIcon.on('right-click', () => {
     appIcon.popUpContextMenu(menuTemplate);
   });
