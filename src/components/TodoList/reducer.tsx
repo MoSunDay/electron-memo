@@ -14,7 +14,7 @@ function todoReducer(state: IState, action: IAction): IState {
   switch (type) {
     case ACTION_TYPE.ADD_TODO:
       stateTodoList = state.todoList
-      completedIndex = stateTodoList.length - 1
+      completedIndex = stateTodoList.length
       for (i = 0; i < stateTodoList.length; i++) {
         if (stateTodoList[i].completed === true) {
           completedIndex = i
