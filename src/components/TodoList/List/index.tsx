@@ -1,5 +1,5 @@
 import React, { FC, ReactElement } from "react";
-import { SortableContainer, SortableElement } from "react-sortable-hoc";
+import { SortableContainer } from "react-sortable-hoc";
 import arrayMove from "array-move";
 import { List } from "antd";
 
