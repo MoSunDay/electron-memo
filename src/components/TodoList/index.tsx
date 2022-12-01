@@ -23,7 +23,6 @@ function init(initTodoList: ITodo[]): IState {
 const TodoList: FC = (): ReactElement => {
   const [state, dispatch] = useReducer(todoReducer, [], init);
   const [loading, setLoading] = useState(false);
-  const [initTask, setInitTask] = useState(false);
 
   useEffect(() => {
     document.title = "小小备忘录";
@@ -78,11 +77,6 @@ const TodoList: FC = (): ReactElement => {
     sleep(300).then(() => {
       setLoading(false);
     });
-  }
-
-  if (!initTask) {
-    setInitTask(true);
-    setInterval(() => reFlush(), 90 * 1000);
   }
 
   return (
