@@ -24,16 +24,16 @@ const TdItem: FC<IProps> = ({ todo, removeTodo, toggleTodo, nowTimestamp }): Rea
             title={
               <Space>
                 <Checkbox checked={completed} onChange={() => toggleTodo(id)}/>
-                <span style={{ textDecoration: completed ? "line-through" : "none" , color: nowTimestamp > deadlineTimestamp ? "red" : "black" }}>{content}</span>
+                <span style={{ textDecoration: completed ? "line-through" : "none" , color: !completed && nowTimestamp > deadlineTimestamp ? "red" : "black" }}>{content}</span>
               </Space>
             }
             description={
               <Space>
                 <Space size="middle">Deadline: </Space>
-                <div style={{ width: 108 }}>
+                <div style={{ width: 118 }}>
                   <DatePicker size="small" defaultValue={deadline} disabled/>
                 </div>
-                <div style={{ width: 92 }}>
+                <div style={{ width: 102 }}>
                   <TimePicker
                     size="small"
                     use12Hours
