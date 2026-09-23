@@ -1,0 +1,18 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.memo-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.memo-scroll::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+  border-radius: 3px;
+}
+.memo-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}

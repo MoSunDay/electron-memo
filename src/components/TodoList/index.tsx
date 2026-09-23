@@ -3,9 +3,9 @@ import React, {
   ReactElement,
   useCallback,
   useEffect,
-  useReducer
+  useReducer,
+  useRef
 } from "react";
-import { Space, Card } from "antd";
 
 import TdInput from "./Input";
 import TdList from "./List";
@@ -19,8 +19,13 @@ function init(initTodoList: ITodo[]): IState {
   };
 }
 
+// 容器上下内边距之和（padding: 10px 12px）
+const PAD_V = 20;
+
 const TodoList: FC = (): ReactElement => {
   const [state, dispatch] = useReducer(todoReducer, [], init);
+  const inputAreaRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.title = "小小备忘录";
@@ -37,6 +42,30 @@ const TodoList: FC = (): ReactElement => {
   useEffect(() => {
     localStorage.setItem("todoList", JSON.stringify(state.todoList));
   }, [state.todoList]);
+
+  // 窗口高度随内容自适应：上报自然高度，主进程负责 clamp 与 setContentSize
+  useEffect(() => {
+    const ipc = (window as any).require?.("electron")?.ipcRenderer;
+    if (!ipc) return;
+    let raf = 0;
+    const report = () => {
+      raf = 0;
+      const inputH = inputAreaRef.current?.offsetHeight ?? 0;
+      const listH = contentRef.current?.scrollHeight ?? 0;
+      ipc.send("memo-content-height", PAD_V + inputH + listH);
+    };
+    const schedule = () => {
+      if (!raf) raf = requestAnimationFrame(report);
+    };
+    const ro = new ResizeObserver(schedule);
+    if (inputAreaRef.current) ro.observe(inputAreaRef.current);
+    if (contentRef.current) ro.observe(contentRef.current);
+    schedule();
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+      ro.disconnect();
+    };
+  }, []);
 
   const addTodo = useCallback((todo: ITodo): void => {
     dispatch({
@@ -67,12 +96,25 @@ const TodoList: FC = (): ReactElement => {
   }, []);
 
   return (
-    <Card title="小小备忘录" style={{ width: 400, margin: 20, height: "auto" }}>
-      <Space direction="vertical">
-        <div style={{ paddingLeft: 14 }}>
-          <div style={{ paddingBottom: 14 }}>
-            <TdInput addTodo={addTodo} todoList={state.todoList} />
-          </div>
+    <div
+      style={{
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        boxSizing: "border-box",
+        padding: "10px 12px",
+        textAlign: "left",
+        background: "#fafafa",
+      }}
+    >
+      <div
+        ref={inputAreaRef}
+        style={{ flexShrink: 0, paddingBottom: 8, borderBottom: "1px solid #f0f0f0" }}
+      >
+        <TdInput addTodo={addTodo} todoList={state.todoList} />
+      </div>
+      <div className="memo-scroll" style={{ flex: 1, minHeight: 0, overflowY: "auto" }}>
+        <div ref={contentRef}>
           <TdList
             todoList={state.todoList}
             removeTodo={removeTodo}
@@ -80,8 +122,8 @@ const TodoList: FC = (): ReactElement => {
             initTodo={initTodo}
           />
         </div>
-      </Space>
-    </Card>
+      </div>
+    </div>
   );
 };
 
