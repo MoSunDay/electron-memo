@@ -19,11 +19,9 @@ function init(initTodoList: ITodo[]): IState {
   };
 }
 
-// 容器上下内边距之和（padding: 10px 12px）
-const PAD_V = 20;
-
 const TodoList: FC = (): ReactElement => {
   const [state, dispatch] = useReducer(todoReducer, [], init);
+  const rootRef = useRef<HTMLDivElement>(null);
   const inputAreaRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -50,9 +48,12 @@ const TodoList: FC = (): ReactElement => {
     let raf = 0;
     const report = () => {
       raf = 0;
+      // 上下内边距从实际样式读取，避免与 padding 手工耦合
+      const style = rootRef.current ? getComputedStyle(rootRef.current) : null;
+      const padV = style ? parseFloat(style.paddingTop) + parseFloat(style.paddingBottom) : 0;
       const inputH = inputAreaRef.current?.offsetHeight ?? 0;
       const listH = contentRef.current?.scrollHeight ?? 0;
-      ipc.send("memo-content-height", PAD_V + inputH + listH);
+      ipc.send("memo-content-height", padV + inputH + listH);
     };
     const schedule = () => {
       if (!raf) raf = requestAnimationFrame(report);
@@ -97,6 +98,7 @@ const TodoList: FC = (): ReactElement => {
 
   return (
     <div
+      ref={rootRef}
       style={{
         height: "100vh",
         display: "flex",

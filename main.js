@@ -8,6 +8,7 @@ const CronJob = require('cron').CronJob;
 
 let win
 let isQuitting = false
+let heightReported = false
 
 const WIN_W = 450
 const WIN_MIN_H = 280
@@ -19,14 +20,16 @@ app.on('before-quit', () => {
 })
 
 function createWindow() {
+  heightReported = false
   win = new BrowserWindow({
     width: WIN_W,
     height: WIN_MIN_H,
     center: true,
+    show: false, // 首帧隐藏，首次高度上报定尺寸后再显示
     // frame: false,
     useContentSize: true,
     autoHideMenuBar: true,
-    resizable: true,
+    resizable: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -40,6 +43,14 @@ function createWindow() {
     win.loadFile(path.join(__dirname, "build/index.html"));
     console.log(`file://${path.join(__dirname, "build/index.html")}`);
   }
+
+  // 兜底：渲染层始终未上报高度时（IPC 异常等），1s 后仍显示窗口；用户主动隐藏则取消
+  let showFallback = setTimeout(() => {
+    if (win && !win.isDestroyed() && !heightReported && !win.isVisible()) win.show()
+  }, 1000)
+  win.on('hide', () => {
+    clearTimeout(showFallback)
+  })
 
   var menuTemplate = [
     {
@@ -140,6 +151,14 @@ function createWindow() {
 ipcMain.on('memo-content-height', (_e, h) => {
   if (!win || !Number.isFinite(h)) return
   const target = Math.max(WIN_MIN_H, Math.min(WIN_MAX_H, Math.round(h)))
+  if (!heightReported) {
+    // 首次上报：先按内容定尺寸并居中再显示，消除启动 280→目标高度的可见跳变
+    heightReported = true
+    win.setContentSize(WIN_W, target)
+    win.center()
+    if (!win.isVisible()) win.show()
+    return
+  }
   const [curW, curH] = win.getContentSize()
   if (curW === WIN_W && curH === target) return
   win.setContentSize(WIN_W, target)
