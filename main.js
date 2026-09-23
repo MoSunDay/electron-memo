@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Tray, Menu, Notification, powerMonitor } = require("electron");
+const { app, BrowserWindow, Tray, Menu, Notification, powerMonitor, ipcMain } = require("electron");
 const pkg = require("./package.json");
 const path = require("path");
 const moment = require("moment");
@@ -9,6 +9,10 @@ const CronJob = require('cron').CronJob;
 let win
 let isQuitting = false
 
+const WIN_W = 450
+const WIN_MIN_H = 280
+const WIN_MAX_H = 550
+
 app.on('before-quit', () => {
   // Cmd+Q / 注销 / 系统退出流程：标记正在退出，放行窗口 close
   isQuitting = true
@@ -16,8 +20,8 @@ app.on('before-quit', () => {
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 450,
-    height: 550,
+    width: WIN_W,
+    height: WIN_MIN_H,
     center: true,
     // frame: false,
     useContentSize: true,
@@ -25,6 +29,7 @@ function createWindow() {
     resizable: true,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
     },
   });
 
@@ -130,6 +135,15 @@ function createWindow() {
   });
   job.start();
 }
+
+// 渲染层上报内容自然高度：窗口高度自适应，上限为原 550，下限 280
+ipcMain.on('memo-content-height', (_e, h) => {
+  if (!win || !Number.isFinite(h)) return
+  const target = Math.max(WIN_MIN_H, Math.min(WIN_MAX_H, Math.round(h)))
+  const [curW, curH] = win.getContentSize()
+  if (curW === WIN_W && curH === target) return
+  win.setContentSize(WIN_W, target)
+})
 
 app.on('ready', createWindow);
 

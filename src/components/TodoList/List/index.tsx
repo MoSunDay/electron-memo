@@ -24,15 +24,17 @@ const TdList: FC<IProps> = ({
   const SortableList = SortableContainer(({ items }) => {
     return (
       <List>
-        {items.map((todo: ITodo, index: number) => (
-          <IdItem
-            key={`${todo.id}`}
-            index={index}
-            todo={todo}
-            removeTodo={removeTodo}
-            toggleTodo={toggleTodo}
-          />
-        ))}
+        {items.length === 0
+          ? <div style={{ padding: "24px 0", textAlign: "center", color: "#bfbfbf" }}>暂无备忘事项</div>
+          : items.map((todo: ITodo, index: number) => (
+            <IdItem
+              key={`${todo.id}`}
+              index={index}
+              todo={todo}
+              removeTodo={removeTodo}
+              toggleTodo={toggleTodo}
+            />
+          ))}
       </List>
     );
     // const SortableItem = SortableElement(({value}) => <li>{value}</li>);

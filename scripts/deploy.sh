@@ -24,5 +24,5 @@ ssh "$REMOTE" "chown -R m:m $TARGET; touch /var/log/electron-memo.log; chown m:m
 echo "[4/4] 重启远端服务并验证..."
 ssh "$REMOTE" 'systemctl restart electron-memo.service; sleep 5
 systemctl is-active electron-memo.service
-DISPLAY=:0 XAUTHORITY=/run/user/1000/gdm/Xauthority xdotool search --name "小小备忘录" getwindowname %@ 2>/dev/null | head -1'
+DISPLAY=:0 XAUTHORITY=/home/m/.Xauthority xdotool search --name "小小备忘录" getwindowname %@ 2>/dev/null | head -1'
 echo "部署完成"
