@@ -1,5 +1,6 @@
 import React, { useState, FC, useRef, ReactElement, useEffect } from "react";
 import { Input, Button, Space } from "antd";
+import type { InputRef } from "antd";
 import moment from "moment";
 import { DatePicker, TimePicker, Checkbox } from "antd";
 import { ITodo } from "../typings";
@@ -10,7 +11,7 @@ interface IProps {
 }
 
 const TdInput: FC<IProps> = ({ addTodo, todoList }): ReactElement => {
-  const inputRef = useRef<Input>(null);
+  const inputRef = useRef<InputRef>(null);
   const [dateValue, setdateVale] = useState(moment("1970-01-01 00:00:00", "YYYY-MM-DD HH:mm:ss"));
 
   const [enableDeadline, setEnableDeadline] = useState(false);
