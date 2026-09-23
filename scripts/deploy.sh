@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# 在本机（node04/ds）构建，部署到远端 node02（192.168.31.57）。
-# 远端由 /etc/systemd/system/electron-memo.service 保证开机自启（首次部署需先安装该 unit）。
+# 在本机（node04/ds）构建，部署到远端 amos（192.168.31.196）。
+# 远端由 /etc/systemd/system/electron-memo.service 保证开机自启（首次部署需先安装该 unit；该机为 LightDM，XAUTHORITY=/home/m/.Xauthority）。
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-REMOTE="${REMOTE:-root@node02}"
+REMOTE="${REMOTE:-root@192.168.31.196}"
 TARGET=/opt/electron-memo
 
 # Node >= 17 需要 legacy provider（react-scripts 4 的 webpack 依赖旧 OpenSSL 哈希）
