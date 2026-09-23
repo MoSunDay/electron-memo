@@ -6,6 +6,7 @@ import moment from "moment";
 import "./list.css";
 
 import { SortableElement } from 'react-sortable-hoc';
+import { useNow } from "../../../hooks/useNow";
 
 interface IProps {
   todo: ITodo;
@@ -15,10 +16,31 @@ interface IProps {
   key: string;
 }
 
+interface IContentProps {
+  content: string;
+  completed: boolean;
+  deadline: moment.Moment;
+}
+
+const TodoContent: FC<IContentProps> = ({ content, completed, deadline }): ReactElement => {
+  const now = useNow();
+  const overdue = !completed && now.isAfter(deadline);
+  return (
+    <div
+      style={{
+        width: 270,
+        textDecoration: completed ? "line-through" : "none",
+        color: overdue ? "red" : "black",
+      }}
+    >
+      {content}
+    </div>
+  );
+};
+
 const TdItem: FC<IProps> = ({ todo, removeTodo, toggleTodo, key, index }): ReactElement => {
   const { id, content, completed, deadline } = todo;
   const deadlineTimestamp = deadline.format();
-  const nowTimestamp = moment().format();
   const SortableItem = SortableElement(() => <span>
   <List.Item>
     {
@@ -27,25 +49,21 @@ const TdItem: FC<IProps> = ({ todo, removeTodo, toggleTodo, key, index }): React
           title={
             <Space>
               <Checkbox checked={completed} onChange={() => toggleTodo(id)}/>
-                  <div
-                    style={{ width: 270, textDecoration: completed ? "line-through" : "none" , color: !completed && nowTimestamp > deadlineTimestamp ? "red" : "black" }}
-                  >
-                    {content}
-                  </div>
+                  <TodoContent content={content} completed={completed} deadline={deadline} />
             </Space>
           }
           description={
             <Space>
               <Space size="middle">Deadline: </Space>
               <div style={{ width: 118 }}>
-                <DatePicker size="small" defaultValue={deadline} disabled/>
+                <DatePicker size="small" value={deadline} disabled/>
               </div>
               <div style={{ width: 102 }}>
                 <TimePicker
                   size="small"
                   use12Hours
                   format="h:mm a"
-                  defaultValue={deadline}
+                  value={deadline}
                   disabled
                 />
               </div>

@@ -12,20 +12,18 @@ interface IProps {
   removeTodo: (id: number) => void;
   toggleTodo: (id: number) => void;
   initTodo: (todos: ITodo[]) => void;
-  loading: boolean;
 }
 
 const TdList: FC<IProps> = ({
   todoList,
   removeTodo,
   toggleTodo,
-  initTodo,
-  loading
+  initTodo
 }): ReactElement => {
 
   const SortableList = SortableContainer(({ items }) => {
     return (
-      <List loading={loading}>
+      <List>
         {items.map((todo: ITodo, index: number) => (
           <IdItem
             key={`${todo.id}`}
@@ -60,8 +58,6 @@ const TdList: FC<IProps> = ({
       }),
     ])
   };
-
-  // setInterval(() => sortList(todoList), 3000);
 
   const onSortEnd = ({ oldIndex, newIndex }): void => {
     todoList = arrayMove(todoList, oldIndex, newIndex)

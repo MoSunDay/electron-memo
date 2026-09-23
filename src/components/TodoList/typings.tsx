@@ -12,13 +12,9 @@ export interface IState {
   todoList: ITodo[];
 }
 
-export interface LState {
-  loading: boolean;
-}
-
 export interface IAction {
   type: ACTION_TYPE;
-  payload: ITodo | number | ITodo[] | boolean;
+  payload: ITodo | number | ITodo[];
 }
 
 export enum ACTION_TYPE {
@@ -26,6 +22,4 @@ export enum ACTION_TYPE {
   REMOVE_TODO = "removeTodo",
   TOGGLE_TODO = "toggleTodo",
   INIT_TODOLIST = "initTodoList",
-  SET_LOADING = 'setLoding',
-  UNSET_LOADING = 'unSetLoding',
 }
