@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Tray, Menu, Notification } = require("electron");
+const { app, BrowserWindow, Tray, Menu, Notification, powerMonitor } = require("electron");
 const pkg = require("./package.json");
 const path = require("path");
 const moment = require("moment");
@@ -7,6 +7,13 @@ const CronJob = require('cron').CronJob;
 
 
 let win
+let isQuitting = false
+
+app.on('before-quit', () => {
+  // Cmd+Q / 注销 / 系统退出流程：标记正在退出，放行窗口 close
+  isQuitting = true
+})
+
 function createWindow() {
   win = new BrowserWindow({
     width: 450,
@@ -63,7 +70,20 @@ function createWindow() {
     appIcon.popUpContextMenu();
   });
 
+  // 系统关机/重启：直接退出，避免阻塞关机（macOS/Linux）
+  powerMonitor.on('shutdown', () => {
+    isQuitting = true
+    app.exit(0)
+  })
+
+  win.on('closed', () => {
+    win = null
+  })
+
   win.on('close', (event) => {
+    if (isQuitting) {
+      return
+    }
     event.preventDefault();
     win.hide();
     // const {dialog, nativeImage} = require('electron')
@@ -112,14 +132,6 @@ function createWindow() {
 }
 
 app.on('ready', createWindow);
-
-app.on('closed', () => {
-  win = null;
-});
-
-app.on('close', (event) => {
-  app.exit();
-});
 
 app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
