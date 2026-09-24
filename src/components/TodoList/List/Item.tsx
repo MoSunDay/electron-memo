@@ -28,7 +28,10 @@ const TodoContent: FC<IContentProps> = ({ content, completed, deadline }): React
   return (
     <div
       style={{
-        width: 270,
+        flex: 1,
+        minWidth: 1,
+        wordBreak: "break-all",
+        whiteSpace: "pre-wrap",
         textDecoration: completed ? "line-through" : "none",
         color: overdue ? "red" : "black",
       }}
@@ -47,10 +50,10 @@ const TdItem: FC<IProps> = ({ todo, removeTodo, toggleTodo, key, index }): React
       !deadlineTimestamp.startsWith("19") ?
         <List.Item.Meta
           title={
-            <Space>
-              <Checkbox checked={completed} onChange={() => toggleTodo(id)}/>
-                  <TodoContent content={content} completed={completed} deadline={deadline} />
-            </Space>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Checkbox checked={completed} onChange={() => toggleTodo(id)} />
+              <TodoContent content={content} completed={completed} deadline={deadline} />
+            </div>
           }
           description={
             <Space>
@@ -76,13 +79,13 @@ const TdItem: FC<IProps> = ({ todo, removeTodo, toggleTodo, key, index }): React
           }
         /> : <List.Item.Meta
           title={
-            <Space size="small">
-              <Checkbox checked={completed} onChange={() => toggleTodo(id)}/>
-              <div style={{textDecoration: completed ? "line-through" : "none", width: 270 }}>{content}</div>
-                <Button shape="circle" size="small" onClick={() => removeTodo(id)}>
-                  -
-                </Button>
-            </Space>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Checkbox checked={completed} onChange={() => toggleTodo(id)} />
+              <TodoContent content={content} completed={completed} deadline={deadline} />
+              <Button shape="circle" size="small" onClick={() => removeTodo(id)}>
+                -
+              </Button>
+            </div>
           }
         />
     }
