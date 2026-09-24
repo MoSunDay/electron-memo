@@ -1,5 +1,5 @@
 import React, { useState, FC, ReactElement, useEffect, useRef } from "react";
-import { Input, Button, Space } from "antd";
+import { Input, Space } from "antd";
 import moment from "moment";
 import { DatePicker, TimePicker, Checkbox } from "antd";
 import { ITodo } from "../typings";
@@ -115,7 +115,6 @@ const TdInput: FC<IProps> = ({ addTodo, todoList }): ReactElement => {
         ) : (
           <Space></Space>
         )}
-        <Button onClick={addItem}>创建</Button>
       </Space>
     </div>
   );
