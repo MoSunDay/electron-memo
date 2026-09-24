@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # 在本机（node04/ds）构建，部署到远端 amos（192.168.31.196）。
-# 远端由 /etc/systemd/system/electron-memo.service 保证开机自启（首次部署需先安装该 unit；该机为 LightDM，XAUTHORITY=/home/m/.Xauthority）。
+# 远端由 /etc/systemd/system/electron-memo.service 保证开机自启（首次部署需先安装该 unit，
+# 模板见 scripts/electron-memo.service；该机为 LightDM，XAUTHORITY=/home/m/.Xauthority）。
+# 注意：unit 内的 GTK_IM_MODULE/QT_IM_MODULE/XMODIFIERS 缺失会导致 Electron 接不到 fcitx5（中文输入失效）。
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
@@ -24,5 +26,8 @@ ssh "$REMOTE" "chown -R m:m $TARGET; touch /var/log/electron-memo.log; chown m:m
 echo "[4/4] 重启远端服务并验证..."
 ssh "$REMOTE" 'systemctl restart electron-memo.service; sleep 5
 systemctl is-active electron-memo.service
+pid=$(pgrep -f "node_modules/.bin/electron \. --disable-gpu" | head -1)
+tr "\0" "\n" < /proc/$pid/environ | grep -qx "GTK_IM_MODULE=fcitx" \
+  || echo "警告: 服务缺少输入法环境变量，中文输入会失效（对照 scripts/electron-memo.service）" >&2
 DISPLAY=:0 XAUTHORITY=/home/m/.Xauthority xdotool search --name "小小备忘录" getwindowname %@ 2>/dev/null | head -1'
 echo "部署完成"

@@ -1,0 +1,29 @@
+[Unit]
+Description=electron-memo 小小备忘录 (X11 :0, auto-start on boot)
+After=graphical.target
+Requires=graphical.target
+
+[Service]
+Type=simple
+User=m
+Group=m
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/m/.Xauthority
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+Environment=HOME=/home/m
+# 输入法：与 XFCE 会话保持一致，否则 Electron 不接入 fcitx5（中文输入失效）
+Environment=GTK_IM_MODULE=fcitx
+Environment=QT_IM_MODULE=fcitx
+Environment=XMODIFIERS=@im=fcitx
+WorkingDirectory=/opt/electron-memo
+ExecStartPre=/bin/sh -c 'for i in $(seq 1 120); do [ -S /tmp/.X11-unix/X0 ] && [ -f /home/m/.Xauthority ] && exit 0; sleep 1; done; exit 1'
+ExecStart=/opt/electron-memo/node_modules/.bin/electron . --disable-gpu
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=180
+StandardOutput=append:/var/log/electron-memo.log
+StandardError=append:/var/log/electron-memo.log
+
+[Install]
+WantedBy=graphical.target
