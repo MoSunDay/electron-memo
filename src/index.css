@@ -6,6 +6,11 @@ body,
   overflow: hidden;
 }
 
+/* overlay：滚动条悬浮不占内容宽度，避免列表滚动时右侧被多挤 6px；不支持时回退 auto */
+.memo-scroll {
+  overflow-y: auto;
+  overflow-y: overlay;
+}
 .memo-scroll::-webkit-scrollbar {
   width: 6px;
 }
