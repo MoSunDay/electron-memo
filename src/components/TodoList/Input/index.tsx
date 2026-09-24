@@ -1,6 +1,5 @@
-import React, { useState, FC, useRef, ReactElement, useEffect } from "react";
+import React, { useState, FC, ReactElement, useEffect } from "react";
 import { Input, Button, Space } from "antd";
-import type { InputRef } from "antd";
 import moment from "moment";
 import { DatePicker, TimePicker, Checkbox } from "antd";
 import { ITodo } from "../typings";
@@ -11,7 +10,6 @@ interface IProps {
 }
 
 const TdInput: FC<IProps> = ({ addTodo, todoList }): ReactElement => {
-  const inputRef = useRef<InputRef>(null);
   const [dateValue, setdateVale] = useState(moment("1970-01-01 00:00:00", "YYYY-MM-DD HH:mm:ss"));
 
   const [enableDeadline, setEnableDeadline] = useState(false);
@@ -39,12 +37,13 @@ const TdInput: FC<IProps> = ({ addTodo, todoList }): ReactElement => {
     }
   };
 
-  const inputOnChange = (e: React.FormEvent<HTMLInputElement>) => {
+  const inputOnChange = (e: React.FormEvent<HTMLTextAreaElement>) => {
     setInputValue(e.currentTarget.value);
   };
 
-  const onPressEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const onPressEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter") {
+      e.preventDefault(); // 回车=创建，不落换行符
       addItem();
     }
   };
@@ -73,14 +72,13 @@ const TdInput: FC<IProps> = ({ addTodo, todoList }): ReactElement => {
         <Space>Deadline</Space>
         <Checkbox onChange={() => tiggerEnableDeadline()} />
       </Space>
-      <Input
+      <Input.TextArea
         placeholder="备忘点什么呢?"
         maxLength={140}
-        style={{ width: 320 }}
+        autoSize={{ minRows: 1, maxRows: 4 }}
         onChange={inputOnChange}
         value={inputValue}
         onPressEnter={onPressEnter}
-        ref={inputRef}
       />
       <Space>
         {enableDeadline === true ? (
