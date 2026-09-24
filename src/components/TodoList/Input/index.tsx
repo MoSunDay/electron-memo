@@ -1,4 +1,4 @@
-import React, { useState, FC, ReactElement, useEffect } from "react";
+import React, { useState, FC, ReactElement, useEffect, useRef } from "react";
 import { Input, Button, Space } from "antd";
 import moment from "moment";
 import { DatePicker, TimePicker, Checkbox } from "antd";
@@ -41,8 +41,23 @@ const TdInput: FC<IProps> = ({ addTodo, todoList }): ReactElement => {
     setInputValue(e.currentTarget.value);
   };
 
+  // 输入法组合状态标记，组合中的 Enter 属于输入法上屏，不触发创建
+  const composingRef = useRef(false);
+
+  const onCompositionStart = (): void => {
+    composingRef.current = true;
+  };
+
+  const onCompositionEnd = (): void => {
+    composingRef.current = false;
+  };
+
   const onPressEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter") {
+      // 组合中的 Enter 属于输入法上屏，不触发创建
+      if (composingRef.current || e.nativeEvent.isComposing || e.nativeEvent.keyCode === 229) {
+        return;
+      }
       e.preventDefault(); // 回车=创建，不落换行符
       addItem();
     }
@@ -78,6 +93,8 @@ const TdInput: FC<IProps> = ({ addTodo, todoList }): ReactElement => {
         onChange={inputOnChange}
         value={inputValue}
         onPressEnter={onPressEnter}
+        onCompositionStart={onCompositionStart}
+        onCompositionEnd={onCompositionEnd}
       />
       <Space>
         {enableDeadline === true ? (
