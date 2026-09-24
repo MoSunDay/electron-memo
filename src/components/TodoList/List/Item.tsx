@@ -24,7 +24,8 @@ interface IContentProps {
 
 const TodoContent: FC<IContentProps> = ({ content, completed, deadline }): ReactElement => {
   const now = useNow();
-  const overdue = !completed && now.isAfter(deadline);
+  const hasDeadline = deadline.year() > 1970; // 1970 为"无截止日期"占位值
+  const overdue = hasDeadline && !completed && now.isAfter(deadline);
   return (
     <div
       style={{

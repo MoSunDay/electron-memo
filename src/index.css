@@ -10,6 +10,9 @@ body,
 .memo-scroll {
   overflow-y: auto;
   overflow-y: overlay;
+  /* 滚动条悬浮在右侧外边距带内，避开列表行右端的删除按钮 */
+  margin-right: -6px;
+  padding-right: 6px;
 }
 .memo-scroll::-webkit-scrollbar {
   width: 6px;
