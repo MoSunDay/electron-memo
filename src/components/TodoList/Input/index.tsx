@@ -66,8 +66,7 @@ const TdInput: FC<IProps> = ({ addTodo, todoList }): ReactElement => {
   };
 
   return (
-    <div>
-    <Space direction="vertical">
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
       <Space>
         <Space>Deadline</Space>
         <Checkbox onChange={() => tiggerEnableDeadline()} />
@@ -101,7 +100,6 @@ const TdInput: FC<IProps> = ({ addTodo, todoList }): ReactElement => {
         )}
         <Button onClick={addItem}>创建</Button>
       </Space>
-    </Space>
     </div>
   );
 };
