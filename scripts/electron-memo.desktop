@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=小小备忘录
+Comment=electron-memo 桌面备忘录（开机由 systemd 服务自动运行）
+Exec=/opt/electron-memo/node_modules/.bin/electron /opt/electron-memo --disable-gpu
+Icon=/opt/electron-memo/ico.png
+Terminal=false
+Categories=Utility;
+StartupWMClass=electron-memo

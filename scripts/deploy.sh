@@ -12,18 +12,23 @@ TARGET=/opt/electron-memo
 # Node >= 17 需要 legacy provider（react-scripts 4 的 webpack 依赖旧 OpenSSL 哈希）
 export NODE_OPTIONS=--openssl-legacy-provider
 
-echo "[1/4] 类型检查 + 构建渲染层..."
+echo "[1/5] 类型检查 + 构建渲染层..."
 (cd "$REPO_DIR" && npx tsc --noEmit && npm run build)
 
-echo "[2/4] 同步到 $REMOTE:$TARGET ..."
+echo "[2/5] 同步到 $REMOTE:$TARGET ..."
 rsync -a --delete "$REPO_DIR/build" "$REMOTE:$TARGET/"
-rsync -a "$REPO_DIR/main.js" "$REPO_DIR/package.json" "$REPO_DIR/ico.png" "$REMOTE:$TARGET/"
+rsync -a "$REPO_DIR/main.js" "$REPO_DIR/package.json" "$REPO_DIR/ico.png" \
+  "$REPO_DIR/scripts/electron-memo.desktop" "$REMOTE:$TARGET/"
 rsync -a --delete "$REPO_DIR/node_modules" "$REMOTE:$TARGET/"
 
-echo "[3/4] 远端属主与日志..."
+echo "[3/5] 远端属主与日志..."
 ssh "$REMOTE" "chown -R m:m $TARGET; touch /var/log/electron-memo.log; chown m:m /var/log/electron-memo.log"
 
-echo "[4/4] 重启远端服务并验证..."
+echo "[4/5] 安装桌面条目（系统菜单图标）..."
+ssh "$REMOTE" 'install -m 644 /opt/electron-memo/electron-memo.desktop /usr/share/applications/electron-memo.desktop
+command -v update-desktop-database >/dev/null && update-desktop-database -q /usr/share/applications || true'
+
+echo "[5/5] 重启远端服务并验证..."
 ssh "$REMOTE" 'systemctl restart electron-memo.service; sleep 5
 systemctl is-active electron-memo.service
 pid=$(pgrep -f "node_modules/.bin/electron \. --disable-gpu" | head -1)

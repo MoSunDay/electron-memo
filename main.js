@@ -25,6 +25,7 @@ function createWindow() {
     width: WIN_W,
     height: WIN_MIN_H,
     center: true,
+    icon: path.join(__dirname, "ico.png"), // 任务栏/Alt-Tab 图标（X11 _NET_WM_ICON）
     show: false, // 首帧隐藏，首次高度上报定尺寸后再显示
     // frame: false,
     useContentSize: true,
@@ -164,7 +165,19 @@ ipcMain.on('memo-content-height', (_e, h) => {
   win.setContentSize(WIN_W, target)
 })
 
-app.on('ready', createWindow);
+// 单实例：已运行时重复启动只唤起已有窗口（避免两个进程争用同一 localStorage）
+const gotTheLock = app.requestSingleInstanceLock()
+if (!gotTheLock) {
+  app.exit(1)
+} else {
+  app.on('second-instance', () => {
+    if (win && !win.isDestroyed()) {
+      win.show()
+      win.focus()
+    }
+  })
+  app.on('ready', createWindow);
+}
 
 app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
