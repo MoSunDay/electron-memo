@@ -10,7 +10,7 @@ let win
 let isQuitting = false
 let heightReported = false
 
-const WIN_W = 450
+const WIN_W = 352
 const WIN_MIN_H = 280
 const WIN_MAX_H = 550
 

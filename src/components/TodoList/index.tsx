@@ -115,7 +115,7 @@ const TodoList: FC = (): ReactElement => {
       >
         <TdInput addTodo={addTodo} todoList={state.todoList} />
       </div>
-      <div className="memo-scroll" style={{ flex: 1, minHeight: 0, overflowY: "auto" }}>
+      <div className="memo-scroll" style={{ flex: 1, minHeight: 0 }}>
         <div ref={contentRef}>
           <TdList
             todoList={state.todoList}
