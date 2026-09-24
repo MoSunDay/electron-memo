@@ -50,7 +50,7 @@ const TdItem: FC<IProps> = ({ todo, removeTodo, toggleTodo, key, index }): React
       !deadlineTimestamp.startsWith("19") ?
         <List.Item.Meta
           title={
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Checkbox checked={completed} onChange={() => toggleTodo(id)} />
               <TodoContent content={content} completed={completed} deadline={deadline} />
             </div>
@@ -79,7 +79,7 @@ const TdItem: FC<IProps> = ({ todo, removeTodo, toggleTodo, key, index }): React
           }
         /> : <List.Item.Meta
           title={
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Checkbox checked={completed} onChange={() => toggleTodo(id)} />
               <TodoContent content={content} completed={completed} deadline={deadline} />
               <Button shape="circle" size="small" onClick={() => removeTodo(id)}>
